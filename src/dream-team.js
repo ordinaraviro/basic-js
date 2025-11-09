@@ -14,22 +14,14 @@ const { NotImplementedError } = require('../lib');
  *
  */
 function createDreamTeam(names) {
-  if (!names || typeof(names) != "object") {
-    return false
-  }
-  let arr = []
+  if (!Array.isArray(names)) return false;
 
-  names.forEach(item => {
-      if (typeof(item) == "string") {
-        let trimed = item.trim()
-    arr.push(trimed[0])
-  }
-  })
+  const letters = names
+    .filter(name => typeof name === 'string')
+    .map(name => name.trim()[0].toUpperCase())
+    .sort();
 
-  arr.sort()
-  
-  console.log(arr.join('').toUpperCase())
-  return arr.join('').toUpperCase()
+  return letters.length ? letters.join('') : false;
 }
 
 module.exports = {
