@@ -20,14 +20,63 @@ const { NotImplementedError } = require('../lib');
  *
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+
+  constructor(isDirect = true) {
+    this.isDirect = isDirect;
   }
 
-  decrypt() {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+  encrypt(text, key) {
+    if (!text || !key) {
+      throw new Error('Incorrect arguments!');
+    }
+
+    const latinAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const upKey = key.toUpperCase();
+    const upText = text.toUpperCase();
+    let keyIndex = 0;
+    const resultArr = upText.split('').map((char, i) => {
+      if (!/[A-Z]/.test(char)) {
+        return text[i];
+      }
+
+      const alphIndex = latinAlphabet.indexOf(char);
+      const cipherIndex = latinAlphabet.indexOf(upKey[keyIndex % upKey.length]);
+      let newIndex = alphIndex + cipherIndex;
+      if (newIndex > 25) newIndex -= 26;
+
+      keyIndex++;
+      return latinAlphabet[newIndex];
+    });
+
+    const res = resultArr.join('');
+    return this.isDirect ? res : res.split('').reverse().join('');
+  }
+
+  decrypt(text, key) {
+    if (!text || !key) {
+      throw new Error('Incorrect arguments!');
+    }
+
+    const latinAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const upKey = key.toUpperCase();
+    const upText = text.toUpperCase();
+    let keyIndex = 0;
+    const resultArr = upText.split('').map((char, i) => {
+      if (!/[A-Z]/.test(char)) {
+        return text[i];
+      }
+
+      const alphIndex = latinAlphabet.indexOf(char);
+      const cipherIndex = latinAlphabet.indexOf(upKey[keyIndex % upKey.length]);
+      let newIndex = alphIndex - cipherIndex;
+      if (newIndex < 0) newIndex += 26;
+
+      keyIndex++;
+      return latinAlphabet[newIndex];
+    });
+
+    const res = resultArr.join('');
+    return this.isDirect ? res : res.split('').reverse().join('');
   }
 }
 
